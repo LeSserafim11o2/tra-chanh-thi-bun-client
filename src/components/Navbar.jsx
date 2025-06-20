@@ -180,7 +180,7 @@ const Navbar = () => {
           </Link>
           {user ? (
             <div className="relative" ref={dropdownRef}>
-              <button className="bg-pink-500 text-white px-4 py-1 rounded-full cursor-pointer flex gap-1 items-center dark:bg-pink-300">
+              <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="bg-pink-500 text-white px-4 py-1 rounded-full cursor-pointer flex gap-1 items-center dark:bg-pink-300">
                 {user.username}
                 <img src={user.avatar || AvatarDefault} alt={user.name} className="h-6 w-6 rounded-full object-cover"/>
               </button>
