@@ -20,7 +20,7 @@ const ProductList = () => {
   return (
     <section className="py-12 px-4 max-w-7xl mx-auto">
       <h2 className="text-3xl font-bold text-center text-pink-600 dark:text-pink-200 mb-10">Sản phẩm nổi bật</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {productSlice.map((item) => (
           <ProductCard key={item._id} product={item} />
         ))}
