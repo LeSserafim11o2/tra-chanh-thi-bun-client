@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaEye, FaEyeSlash, FaSearch, FaMoon, FaSun, FaBars } from "react-icons/fa";
 import { IoCloseSharp } from "react-icons/io5";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNotification } from "../context/NotificationContext";
 import toast from "react-hot-toast";
+import AvatarDefault from "../assets/AvatarDefault.jpg";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,6 +19,9 @@ const Navbar = () => {
   const [darkMode, setDarkMode] = useState(() => {return localStorage.getItem("theme") === "dark"});
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
   const navigate = useNavigate();
   const { getTotalItems } = useCart();
 
@@ -102,6 +106,17 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <header className="bg-pink-100 shadow sticky top-0 z-50 dark:bg-black/80">
       {/* Navbar Menu */}
@@ -115,10 +130,10 @@ const Navbar = () => {
                 <img src={logo} alt="Logo" className="h-10" />
                 <button onClick={() => setIsMobileMenuOpen(false)}><IoCloseSharp size={24} /></button>
               </div>
-              <Link to="/" className="text-2xl" onClick={() => setIsMobileMenuOpen(false)}>Trang chủ</Link>
-              <Link to="/about" className="text-2xl" onClick={() => setIsMobileMenuOpen(false)}>Giới thiệu</Link>
-              <Link to="/products" className="text-2xl" onClick={() => setIsMobileMenuOpen(false)}>Sản phẩm</Link>
-              {user?.role === "admin" && (<Link to="/admin/products" className="text-2xl" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link to="/" className="text-2xl" onClick={() => {setIsMobileMenuOpen(false); scrollTo(0, 0)}}>Trang chủ</Link>
+              <Link to="/about" className="text-2xl" onClick={() => {setIsMobileMenuOpen(false); scrollTo(0, 0)}}>Giới thiệu</Link>
+              <Link to="/products" className="text-2xl" onClick={() => {setIsMobileMenuOpen(false); scrollTo(0, 0)}}>Sản phẩm</Link>
+              {user?.role === "admin" && (<Link to="/admin/products" className="text-2xl" onClick={() => {setIsMobileMenuOpen(false); scrollTo(0, 0)}}>
               Quản lý
               {(hasOrderNotification || hasChatNotification) && (<span className="absolute -top-2 -right-3 w-2 h-2 bg-red-500 rounded-full"></span>)}
               </Link>)}
@@ -164,28 +179,29 @@ const Navbar = () => {
             <span className="absolute -top-2 -right-2 bg-red-400 text-white text-xs px-1 rounded-full">{getTotalItems()}</span>
           </Link>
           {user ? (
-            <div className="relative group">
+            <div className="relative" ref={dropdownRef}>
               <button className="bg-pink-500 text-white px-4 py-1 rounded-full cursor-pointer flex gap-1 items-center dark:bg-pink-300">
                 {user.username}
-                <img src={user.avatar || "https://i.postimg.cc/x83kpBRy/Avatar-Default.jpg"} alt={user.name} className="h-6 w-6 rounded-full object-cover"/>
+                <img src={user.avatar || AvatarDefault} alt={user.name} className="h-6 w-6 rounded-full object-cover"/>
               </button>
-              <div className="absolute w-[80%] right-0 bg-pink-400 dark:bg-pink-300 shadow-md hidden group-hover:block z-50 text-white">
-                <button onClick={logout} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full cursor-pointer">
+              {isDropdownOpen && 
+              <div className="absolute w-[80%] right-0 bg-pink-400 dark:bg-pink-300 shadow-md z-50 text-white rounded-md">
+                <button onClick={() => {logout(); setIsDropdownOpen(false)}} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full">
                   Đăng xuất
                 </button>
-                <Link to={"/user/profile"} onClick={() => scrollTo(0, 0)} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full cursor-pointer">
+                <Link to={"/user/profile"} onClick={() => {scrollTo(0, 0); setIsDropdownOpen(false)}} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full">
                   Tài khoản
                 </Link>
-                <Link to={"/user/favorites"} onClick={() => scrollTo(0, 0)} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full cursor-pointer">
+                <Link to={"/user/favorites"} onClick={() => {scrollTo(0, 0); setIsDropdownOpen(false)}} className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full">
                   Yêu thích
                 </Link>
                 <div className="relative">
-                  <Link to="/user/orders" onClick={() => {clearOrderNotification(); scrollTo(0, 0)}}
-                    className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full cursor-pointer"> Đơn hàng
+                  <Link to="/user/orders" onClick={() => {clearOrderNotification(); scrollTo(0, 0); setIsDropdownOpen(false)}}
+                    className="block px-4 py-2 text-left text-sm dark:hover:bg-pink-400 hover:bg-pink-500 w-full"> Đơn hàng
                     {user?.role === "user" && hasOrderNotification && (<span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full"></span>)}
                   </Link>
                 </div>
-              </div>
+              </div>}
             </div>
           ) : (
             <button onClick={() => setIsModalOpen(true)} className="bg-pink-500 dark:bg-pink-300 dark:hover:bg-pink-400 text-white px-4 py-1 rounded-full hover:bg-pink-600 cursor-pointer">
