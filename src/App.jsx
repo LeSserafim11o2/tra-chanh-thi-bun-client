@@ -1,5 +1,8 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoading } from "./context/LoadingContext";
 import { Toaster } from 'react-hot-toast';
+import LoadingScreen from "./components/LoadingScreen";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -20,9 +23,18 @@ import AdminChatPage from "./admin/AdminChatPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
+  const location = useLocation();
+  const {loading, setLoading} = useLoading();
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   return (
-    <div className="select-none">
+    <div className="select-none relative">
+      {!loading && <>
         <Navbar/>
         <Routes>
           <Route path="/" element={<Home/>}/>
@@ -44,6 +56,8 @@ const App = () => {
         <Footer/>
         <ChatPopup/>
         <Toaster position="top-center"/>
+      </>}
+      {loading && <LoadingScreen />}
     </div>
   );
 };

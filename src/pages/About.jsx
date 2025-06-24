@@ -19,7 +19,7 @@ const About = () => {
             hứng về hành trình và đam mê.
           </p>
           <p>
-            Hãy cùng chúng tôi khám phá câu chuyện của người thuyền trưởng thầm lặng phía sau thương hiệu thân thuộc này: anh <span className="font-semibold">Nguyễn Xuân Thịnh</span>. 
+            Hãy cùng chúng tôi khám phá câu chuyện của người thuyền trưởng thầm lặng phía sau thương hiệu thân thuộc này: anh <span className="font-semibold">Nguyễn Quốc Thịnh</span>. 
             Sinh năm 1989, anh Thịnh không phải là một cái tên xa lạ với những người gắn bó cùng hương vị ẩm thực hay những con đường Hà Nội.
           </p>
           <p>
@@ -37,7 +37,7 @@ const About = () => {
             đẹp nhất cho gia đình và cho những khách hàng yêu quý.
           </p>
           <p>
-            Anh <span className="font-semibold">Nguyễn Xuân Thịnh</span> - người đàn ông với trái tim ấm áp, bàn tay tài hoa và tinh thần không ngừng học hỏi, đổi mới - đã mang đến cho bạn 
+            Anh <span className="font-semibold">Nguyễn Quốc Thịnh</span> - người đàn ông với trái tim ấm áp, bàn tay tài hoa và tinh thần không ngừng học hỏi, đổi mới - đã mang đến cho bạn 
             không chỉ một thức uống, mà còn là một phần câu chuyện, một trải nghiệm chân thật, giản dị nhưng đầy ý nghĩa.
           </p>
         </div>
